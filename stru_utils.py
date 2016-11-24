@@ -186,16 +186,6 @@ def df_iter_flt(df):
     Linear_Accel_x = iter_filter(Linear_Accel_x)
     Linear_Accel_y = iter_filter(Linear_Accel_y)
     Linear_Accel_z = iter_filter(Linear_Accel_z)
-    Angular_Velocity_x = iter_filter(Angular_Velocity_x)
-    Angular_Velocity_y = iter_filter(Angular_Velocity_y)
-    Angular_Velocity_z = iter_filter(Angular_Velocity_z)
-
-    Linear_Accel_x = stats.zscore(Linear_Accel_x)
-    Linear_Accel_y = stats.zscore(Linear_Accel_y)
-    Linear_Accel_z = stats.zscore(Linear_Accel_z)
-    Angular_Velocity_x = stats.zscore(Angular_Velocity_x)
-    Angular_Velocity_y = stats.zscore(Angular_Velocity_y)
-    Angular_Velocity_z = stats.zscore(Angular_Velocity_z)
 
     df['Linear_Accel_x'] = Linear_Accel_x
     df['Linear_Accel_y'] = Linear_Accel_y
@@ -203,9 +193,7 @@ def df_iter_flt(df):
     df['Angular_Velocity_x'] = Angular_Velocity_x
     df['Angular_Velocity_y'] = Angular_Velocity_y
     df['Angular_Velocity_z'] = Angular_Velocity_z
-
     return df
-
 
 def filter(df):
     flt_para = 10
@@ -269,9 +257,7 @@ def gen_feat(df):
                    "cov_acc_z_gyro_x","cov_acc_z_gyro_y",
                    "energy_accx","energy_accy","energy_accz", "energy_acc_xyz",
                    "delta_pitch","delta_roll","duration"])
-
-#     numpy.corrcoef(a,b)
-
+#     
     allfeats = []
     allfeats.append(header)
     
@@ -460,6 +446,7 @@ def clf_cm_pickle(classifier, X_test, y_test):#
     prec_pos = TP/(TP + FP)
     # F1 score for positive = 2 * precision * recall / (precision + recall)….or it can be F1= 2*TP/(2*TP + FP+ FN)
     f1_pos = 2*TP/(TP*2 + FP+ FN)
+    print(f1_pos)
     # TPR = TP/(TP+FN)
     TPR = cm[1,1]/sum(cm[1,j] for j in range(len(set(y_test))))
     # FPR = FP/(FP+TN)

@@ -162,9 +162,8 @@ if 1:
 
 
         for threshold_str in ['0.5','0.6','0.7','0.8','0.9']:
-
-            testsubj ='test'+subj
             trainsubj = 'train'+subj
+            testsubj ='test'+subj
 
             trainsubjF = trainsubj + '/'
             testsubjF = testsubj + '/'

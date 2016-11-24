@@ -31,12 +31,11 @@ from scipy.stats import *
 
 
 #  this subject list is following the order in the subject ID map.
-subjs = ['Rawan']#,'Dzung','Shibo','Will', 'Gleb', 'JC','Matt','Jiapeng', 'Cao', 'Eric'
+subjs = ['Rawan','Shibo','Dzung','Will', 'Gleb', 'JC','Matt','Jiapeng', 'Cao', 'Eric']#
 Nfolds = 10
 Ntrials = 5
 
 # avgRes = pd.DataFrame(columns = ['subject','mean fscore','var fscore'], index = range(len(subj_list)))
-clf = RandomForestClassifier(n_estimators = 100)
 allResultFolder = "./result/personalized/split/"
 
 if not os.path.exists(allResultFolder):
@@ -90,20 +89,7 @@ if 1:
             # notice:   duration should not be included in features 
             #           as in detection period this distinguishable feature will be in different distribution
             # 
-
             X = df.iloc[:,:-2].as_matrix()
-
-            # header =[]
-            # featL = ["mean","skew","RMS","kurtosis",'stdev']#,'5th_coef','4th_coef','3rd_coef','2nd_coef','1st_coef'
-            # headlist = ['Linear_Accel_x','Linear_Accel_y','Linear_Accel_z','Angular_Velocity_x','Angular_Velocity_y','Angular_Velocity_z']
-            # for key in headlist:
-            #     for feat in featL:
-            #         one = key + "_" + feat
-            #         header.extend([one])
-            # print(header)
-            # df_X = df[header]
-            # X = df_X.as_matrix()
-
             equiv = {0:1, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1,7:1, 8:1, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0}
             df["f-nf"] = df["activity"].map(equiv)
             
