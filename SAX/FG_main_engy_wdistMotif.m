@@ -5,7 +5,7 @@
 % 
 % 
 
-function brecall = FG_main_engy(subj, run, dist_thres, n_motif)
+function brecall = FG_main_engy_wdistMotif(subj, run, dist_thres, n_motif)
 
 %'Shibo','Dzung',  'JC', 'Cao','Jiapeng','Eric','Rawan','Gleb','Will','Matt'
 % subjs = {'Eric','Dzung','Gleb','Will'}; %'Rawan','JC','Cao','Jiapeng','Eric',
@@ -42,11 +42,13 @@ if 1
         FG_save_engy_gt(test_subj, config_file);
         FG_save_engy_gt(train_subj, config_file);
         [test_sig_cell, test_gt_global_htcell, test_gt_local_htcell, train_sig_cell, train_gt_htcell ] = FG_load_engy_set(test_subj, train_subj, config_file);
-        [motif_SAX_cell] = FG_motif_sel(train_sig_cell, train_gt_htcell, config_file, motif_sel_mode, n_motif);
+        
+        %/..........
         num_motif = size(motif_SAX_cell,2);
 
 %         dist_thres = 5;
         std_thres = 0.01;
+        
         [train_pred_htcell, num_pred_train] = FG_seg_engy_detect_save(train_subj, motif_SAX_cell, train_sig_cell, std_thres, dist_thres, run, config_file);  
         [test_pred_htcell, num_pred_test] = FG_seg_engy_detect_save(test_subj, motif_SAX_cell, test_sig_cell, std_thres, dist_thres, run, config_file);      
 

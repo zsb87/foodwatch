@@ -11,9 +11,9 @@ function [test_pred_htcell, num_pred] = FG_seg_engy_detect_read(save_subj,run, c
     
     for i = 1
         
-        predfolder = [folder,save_subj, '(8Hz)/segmentation/engy_run',num2str(run),'_pred/'];
+        predfolder = [folder,save_subj, '/segmentation/engy_run',num2str(run),'_pred/'];
         if ~exist(predfolder, 'dir')   mkdir(predfolder),  end
-        pred_reduce_filepath = strcat(predfolder, ['pred_acc_headtail_reduced_', num2str(i), '.csv']);
+        pred_reduce_filepath = strcat(predfolder, ['pred_headtail_reduced_', num2str(i), '.csv']);
         
         %-------------------------------------------------------------------------------
         % core function for judging a prediction

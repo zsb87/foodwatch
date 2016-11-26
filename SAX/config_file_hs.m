@@ -3,12 +3,12 @@
     stride = 2;
     dict_size = 5;
     
-    raw_fCol = 9;
-    raw_nfCol = 10;
+    raw_fCol = 7;
+    raw_nfCol = 8;
     engy_fCol = 8;
-    engy_nfCol = 11;
+    engy_nfCol = 9;
     % define folder
-    folder = '../../inlabUnstr/subject/';
+    folder = '../../inlabHiStr/subject/';
     subjectname = [subj];
     subjfolder = [folder, subjectname,'/'];
     energyfolder = [subjfolder,'feature/energy/'];

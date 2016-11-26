@@ -45,33 +45,18 @@ function [test_pred_ht, num_pred, pw] = finding_segmentation(motif_cell, test_si
         % calculate similarity with predefined pattern
         for i = 1: size(test_SAX,1)
             
+%             debug
+%             if i == 1325
+%                 intertrta =1 ;
+%             end
             sax1 = test_SAX(i,:);
             sax2 = motif_cell{motif_valid_list(j)}(1,:);
             
-%             
-%           correct bug in SAX core function
-%           when all signal are the same value, return illegal: all 0,
-%           which is forbidden by SAX core func itself
-% 
-%             
-            for n_sax = 1:size(sax1,2)
-                ifsax1posint = isposint(sax1(n_sax));
-                if ifsax1posint == 0
-                    interflg = 1;
-                    sax1 = sax1+floor(dict_size/2);
-                end
-            end
-            
-            for n_sax = 1:size(sax1,2)
-                ifsax1posint = isposint(sax1(n_sax));
-                if ifsax1posint == 0
-                    interflg = 1;
-                end
-            end
-            disttmp = min_dist(sax1, sax2, dict_size,1);
+
+            isposint()
+            disttmp = min_dist(test_SAX(i,:), motif_cell{motif_valid_list(j)}(1,:), dict_size,1);
             dists = [dists;disttmp];
         end
-        
         % convert distance of substrings with tiny std_dev, that is noise, to
         % inf
         % from [0,1,0,0,1] to [NaN, inf, NaN, NaN, inf]
@@ -109,6 +94,7 @@ function [test_pred_ht, num_pred, pw] = finding_segmentation(motif_cell, test_si
     headtaillendist = unique(headtaillendist,'rows');
     
     if size(headtaillendist,1) ~= 0
+        
         
 %         temporary comment in this grouping function
         

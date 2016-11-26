@@ -3,6 +3,10 @@
     stride = 2;
     dict_size = 5;
     
+    raw_fCol = 9;
+    raw_nfCol = 10;
+    engy_fCol = 8;
+    engy_nfCol = 11;
     % define folder
     folder = '../../inlabStr/subject/';
     subjectname = [subj];
@@ -13,15 +17,3 @@
     featfolder = [subjfolder, 'feature/'];
     gtHtFolder = [folder, subj,'/segmentation/rawdata_gt/'];
     
-    
-    
-%     'Dzung': ['Spoon', 'Straw','HandFries','HandChips'],
-%         'JC': ['Spoon', 'SaladFork','HandSourPatch', 'HandBread', 'HandChips'],
-%         'Matt': ['HandChips', 'HandBread','HandChips', 'HandBread','Spoon', 'SaladFork', 'Cup', 'Bottle'],
-%         'Jiapeng': ['HandCracker', 'Popcorn', 'HandChips','Cup', 'LicksFingers', 'Spoon','Cup','SaladFork', 'HandBread', 'SaladSpoon'],
-%         'Eric': ['HandChips','Cup','Spoon'],
-%         'Will':  ['popcorn', 'RedFish', 'swedishFish', 'chips', 'EatsFromBag', 'bottle', 'Bottle'], 
-%         'Shibo': ['Straw', 'HandFries','HandBurger', 'Spoon'],
-%         'Rawan': ['HandChips'],
-%         'Cao': ['Cup'],
-%     

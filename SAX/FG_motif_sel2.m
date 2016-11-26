@@ -4,12 +4,12 @@
 %
 % --------------------------------------------------------------------
 
-function [motif_SAX_cell] = FG_motif_sel( train_sig_cell, train_gt_htcell, config_file, motif_sel_mode, n_motif)
+function [motif_SAX_cell] = FG_motif_sel2( train_sig_cell, train_gt_htcell, config_file, motif_sel_mode)
     %% Evaluate global configuration file
     try
         eval(config_file);
     catch
-        disp('config file!_motif_sel')
+        disp('config file failed!_motif_sel')
     end
         
     motif_SAX_cell = [];
@@ -151,7 +151,8 @@ function [motif_SAX_cell] = FG_motif_sel( train_sig_cell, train_gt_htcell, confi
     if motif_sel_mode == 3
         % format-  engy_test_cell: {engy_xyz(1), engy_xyz(2), ... ,}
             
-        [motif_SAX_cell] = FG_KcentriodSC_27(train_sig_cell, train_gt_htcell, n_motif, dict_size);
+        nn=4;
+        [motif_SAX_cell] = FG_KcentriodSC_27(train_sig_cell, train_gt_htcell, nn, dict_size);
     end
     
             %% sort and plot

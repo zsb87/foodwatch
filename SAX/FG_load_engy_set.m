@@ -3,13 +3,11 @@ function [test_sig_cell, test_gt_global_htcell, test_gt_local_htcell, train_sig_
     try
         eval(config_file);
     catch
-        disp('config file failed!_seg_detect')
+        disp('config file!_load_engy')
     end
     
     win = 4;
     stride = 2;
-    dict_size = 5;
-    
     
     sigfolder = [folder, train_subj,'/feature/energy/'];
     sigfile = ['engy_ori_win', num2str(win), '_str', num2str(stride),'_labeled.csv'];
@@ -18,9 +16,6 @@ function [test_sig_cell, test_gt_global_htcell, test_gt_local_htcell, train_sig_
     train_sig_cell{1} = data(:,2);
     train_gt_htcell{1} = csvread([folder, train_subj,'/segmentation/engy_gt/gt_feeding_headtail.csv']);% it has (n,3) shape now
     
-    
-    
-    folder = '../../inlabStr/subject/';
     
     sigfolder = [folder, test_subj,'/feature/energy/'];
     sigfile = ['engy_ori_win', num2str(win), '_str', num2str(stride),'_labeled.csv'];

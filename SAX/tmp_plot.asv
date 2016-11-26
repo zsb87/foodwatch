@@ -1,0 +1,4 @@
+clc;
+clear all;
+motif  = csvread('C:\Users\szh702\Documents\FoodWatch\inlabStr\subject\testDzung\segmentation\engy_run1_pred\dist_all\pred_motif1.csv');
+figure; 

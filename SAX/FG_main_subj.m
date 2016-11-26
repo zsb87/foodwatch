@@ -1,28 +1,18 @@
-% 
-% INPUT FILE:   testdata_labeled.csv
-%               engy_ori_win4_str2_labeled.csv
-% 
-% 
-% 
-
-function brecall = FG_main_engy(subj, run, dist_thres, n_motif)
-
+clear;
 %'Shibo','Dzung',  'JC', 'Cao','Jiapeng','Eric','Rawan','Gleb','Will','Matt'
-% subjs = {'Eric','Dzung','Gleb','Will'}; %'Rawan','JC','Cao','Jiapeng','Eric',
+subjs = {'Dzung'}; %'Dzung','Rawan','JC','Cao','Jiapeng','Eric',
 %problem subject: 'Matt','Will','Gleb' data missing
-protocol =  'inlabHiStr';%'inlabUnstr';
-config_file = 'config_file_hs';%'config_file_us';
+protocol =  'inlabStr';%'inlabUnstr';
+config_file = 'config_file_is';%'config_file_us';
 motif_sel_mode = 3;
 
-% for i = i_subj%:size(subjs,2)
-if 1
+for i = 1:size(subjs,2)
+    
 %    if want to save a  different run's result. change to 2:2, 3:3 ....
-%     for run = 4:4
-%         train_subj = ['train',subjs{i}];
-%         test_subj = strcat('test',subjs{i});
-        train_subj = ['train',subj];
-        test_subj = ['test',subj];
-        
+    for run = 3:3
+        train_subj = ['train',subjs{i}];
+        test_subj = strcat('test',subjs{i});
+
         result = [];
         meas_thres_all=[];
         recall_all=[];
@@ -42,20 +32,20 @@ if 1
         FG_save_engy_gt(test_subj, config_file);
         FG_save_engy_gt(train_subj, config_file);
         [test_sig_cell, test_gt_global_htcell, test_gt_local_htcell, train_sig_cell, train_gt_htcell ] = FG_load_engy_set(test_subj, train_subj, config_file);
-        [motif_SAX_cell] = FG_motif_sel(train_sig_cell, train_gt_htcell, config_file, motif_sel_mode, n_motif);
+        [motif_SAX_cell] = FG_motif_sel(train_sig_cell, train_gt_htcell, config_file, motif_sel_mode);
         num_motif = size(motif_SAX_cell,2);
 
-%         dist_thres = 5;
+        dist_thres = 4;
         std_thres = 0.01;
-        [train_pred_htcell, num_pred_train] = FG_seg_engy_detect_save(train_subj, motif_SAX_cell, train_sig_cell, std_thres, dist_thres, run, config_file);  
-        [test_pred_htcell, num_pred_test] = FG_seg_engy_detect_save(test_subj, motif_SAX_cell, test_sig_cell, std_thres, dist_thres, run, config_file);      
+        [train_pred_htcell, num_pred_train] = FG_seg_engy_detect_save(train_subj, motif_SAX_cell, train_sig_cell, std_thres, dist_thres,run, config_file);  
+        [test_pred_htcell, num_pred_test] = FG_seg_engy_detect_save(test_subj, motif_SAX_cell, test_sig_cell, std_thres, dist_thres,run,  config_file);      
 
         % for Rawan, 0.01 is better; for jiapeng, 0 is better
         for meas_thres = 0.5:0.1:0.9
-%             for dist_thres =  0.7 %4 is too big
+            for dist_thres = 4
                 std_thres = 0.01;
                 
-%                 [test_pred_htcell, num_pred_test] = FG_seg_engy_detect_read(test_subj, run, config_file);
+%                 [test_pred_htcell, num_pred] = FG_seg_engy_detect_read(test_subj, run, config_file);
 
                 if motif_sel_mode == 1
                     [num_gt, num_TP, recall] = FG_seg_pred_trueOrFalse_accang(subj, config_file);
@@ -87,14 +77,14 @@ if 1
     %             num_TP_all = [num_TP_all, num_TP];
                 dist_thre_all = [dist_thre_all, dist_thres];
                 recall_all = [recall_all, recall];
-%             end
+            end
         end
 
         for meas_thres = 0.5:0.1:0.9
-%             for dist_thres = 0.7
+            for dist_thres = 4
                 std_thres = 0.01;
                 
-%                 [train_pred_htcell, num_pred_train] = FG_seg_engy_detect_read(train_subj, run, config_file);
+                [train_pred_htcell, num_pred] = FG_seg_engy_detect_read(train_subj, run, config_file);
 
                 if motif_sel_mode == 1
                     [num_gt, num_TP, recall] = FG_seg_pred_trueOrFalse_accang(subj, config_file);
@@ -123,7 +113,7 @@ if 1
     %             num_TP_all = [num_TP_all, num_TP];
                 dist_thre_all = [dist_thre_all, dist_thres];
                 recall_all = [recall_all, recall];
-%             end
+            end
         end
 
         result = [result; meas_thres_all];
@@ -141,9 +131,6 @@ if 1
 
         resultfile_all = ['engy_run',num2str(run),'_result_',test_subj,'_Msel',int2str(motif_sel_mode),'_thre',num2str(dist_thres),'_meas',num2str(meas_thres),'.csv'];
         resultfile_allpath = [folder, resultfile_all];
-        result = result';
-        csvwrite(resultfile_allpath, double(result));
-        
-        brecall = result(end,1);
-%     end
+        csvwrite(resultfile_allpath, result');
+    end
 end

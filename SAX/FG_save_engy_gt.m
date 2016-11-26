@@ -3,7 +3,7 @@ function FG_save_engy_gt(subj, config_file)
     try
         eval(config_file);
     catch
-        disp('config file failed!')
+        disp('config file!')
     end
     
     
@@ -15,8 +15,8 @@ function FG_save_engy_gt(subj, config_file)
     sigfolder = [folder, subj,'/feature/energy/'];
     sigfile = ['engy_ori_win', num2str(win), '_str', num2str(stride),'_labeled.csv'];
     data = csvread(strcat(sigfolder,sigfile),1);
-    fClass = data(:,8);
-    nfClass = data(:,11);
+    fClass = data(:,engy_fCol);
+    nfClass = data(:,engy_nfCol);
     
     gtHtFolder = [folder, subj,'/segmentation/engy_gt/'];
     if ~exist(gtHtFolder, 'dir')    mkdir(gtHtFolder),   end

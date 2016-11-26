@@ -1,8 +1,7 @@
 %% energy_acc_xyz is test data
 %  ptns_cell is predefined data saved in mat file
 
-
-function [test_pred_ht, num_pred, pw] = finding_segmentation(motif_cell, test_sig, std_thres, dist_thres, dict_size, predfilepath, pred_reduce_filepath,dist_folder)
+function [test_pred_ht, num_pred, pw] = reading_segmentation(motif_cell, test_sig, std_thres, dist_thres, dict_size, predfilepath, pred_reduce_filepath,dist_folder)
     % convert training set to symbolic representation and save in cell
     pred_list = [];
     num_pred = 0;

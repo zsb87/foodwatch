@@ -4,19 +4,20 @@ function FG_save_rawdata_gt(subj, config_file)
     try
         eval(config_file);
     catch
-        disp('config file failed!')
+        disp('config file!')
     end
     
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %
     % save all activities' ground truth in 'gt_feeding_headtail.csv'
-    %
+    %   
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     testdata_labeled = [folder, subj,'/testdata_labeled.csv'];
     data = csvread(testdata_labeled,1,1);
-    fClass = data(:,9);
-    nfClass = data(:,10);
+    
+    fClass = data(:,raw_fCol);
+    nfClass = data(:,raw_nfCol);
     if ~exist(gtHtFolder, 'dir')    mkdir(gtHtFolder),   end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
