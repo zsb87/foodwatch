@@ -135,7 +135,7 @@ def genWinHandUpHoldingDownLabels(annotDf, r_df_test, activities):
     for n in range(len(HU_St_list)):
         UD_dur.append([HU_St_list[n],HD_Et_list[n]])
 
-    r_df_test_label = markClassPeriod( r_df_test,'nonfeedingClass' , UD_dur )
+    r_df_test_label = markClassPeriod( r_df_test,'Gestures' , UD_dur )
 
     for i,activity in enumerate(activities):
 
@@ -149,7 +149,17 @@ def genWinHandUpHoldingDownLabels(annotDf, r_df_test, activities):
 
         r_df_test_label = markExistingClassPeriod( r_df_test_label , 'activity', i+1, act_dur )
 
-        print(act_dur)
+    equiv = { 1:1, 2:1, 3:1, 4:1, 5:1, 6:1,7:1, 8:1, 9:1, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0, 18:0}
+    r_df_test_label["feedingActivity"] = r_df_test_label["activity"].map(equiv)
+    equiv = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0,7:0, 8:0, 9:0, 10:1, 11:1, 12:1, 13:1, 14:1, 15:1, 16:1, 17:1, 18:1}
+    r_df_test_label["nonfeedingActivity"] = r_df_test_label["activity"].map(equiv)
+# np.bitwise_and
+    r_df_test_label['nonfeedingClass'] = pd.Series((np.uint64(r_df_test_label['Gestures'].as_matrix()) & np.uint64(r_df_test_label['nonfeedingActivity'].as_matrix()) ), index=r_df_test_label.index)
+    r_df_test_label['feedingClass'] = pd.Series((np.uint64(r_df_test_label['Gestures'].as_matrix()) & np.uint64(r_df_test_label['feedingActivity'].as_matrix()) ), index=r_df_test_label.index)
+
+    # r_df_test_label = r_df_test_label.drop('Gestures',1)
+    # r_df_test_label = r_df_test_label.drop('nonfeedingActivity',1)
+    # r_df_test_label = r_df_test_label.drop('feedingActivity',1)
 
     return r_df_test_label
 
@@ -306,10 +316,10 @@ def genVideoSyncFile(featsfile, birthtime, r_df_test, save_flg, syncfile):
 save_flg = 1
 
 # subjs = []
-subjs = ['Eric']#   not finished:  'Matt', 
+subjs = ['Gleb']#   not finished:  'Matt', ,'Gleb'
 
 for subj in subjs:
-    subjfolder = subj + '(8Hz)'
+    subjfolder = subj #+ '(8Hz)'
     file = "../inlabStr/subject/"+subjfolder+"/right/data.csv"
     birthfile = "../inlabStr/subject/"+subjfolder+'/birth.txt'
     if subj == 'Matt':
@@ -318,7 +328,8 @@ for subj in subjs:
     birthtime = open(birthfile, 'r').read()
     print(birthtime)
     
-    if subj == 'Shibo':
+    # if subj == 'Shibo': 
+    if os.path.isfile("../inlabStr/subject/"+subjfolder+'/end.txt') :
         endfile = "../inlabStr/subject/"+subjfolder+'/end.txt'
         endtime = open(endfile, 'r').read()
         print(endtime)
@@ -330,6 +341,8 @@ for subj in subjs:
     
 
     video_sensor_bias_ms = 0
+
+    # r_df_test.to_csv("../inlabStr/subject/" + subjfolder + "/rawdata_for_figure.csv")
     
     # 
 
@@ -360,7 +373,9 @@ for subj in subjs:
             'Eric': -63,
             'Will': 0,  #???
             'Shibo': 0,
-            'Rawan': 0
+            'Rawan': 0,
+            'Gleb': 5
+
         }.get(x, 0)
 
     time_error = getTimeError(subj)
@@ -395,6 +410,9 @@ for subj in subjs:
     # ------------------------------------------------------------------------------
 
     if subj == 'Rawan':
+
+        disp('genWinHandUpHoldingDownLabels is not applicable for IS Rawan')
+        exit()
         activities = [ 
             'Spoon',            #1
             'HandBread',        #2
@@ -448,7 +466,7 @@ for subj in subjs:
     # save in engy_ori_win4_str2.csv
     # 
     # ------------------------------------------------------------------------------
-    freq = 8
+    freq = 31
     winsize = 4
     stride = 2
 
