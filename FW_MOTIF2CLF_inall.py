@@ -7,9 +7,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import datetime
+import time
 import random
 import glob
-
 from sklearn import preprocessing
 from sklearn import svm, neighbors, metrics, cross_validation, preprocessing
 from sklearn.externals import joblib
@@ -36,16 +36,30 @@ i_subj = int(sys.argv[1])
 run = int(sys.argv[2])
 dist = float(sys.argv[3])
 n_motif = float(sys.argv[4])
+config_file = str(sys.argv[5])
 
-protocol = 'inlabUnstr'
-#           0       1       2      3      4       5        6      7     8
-subjs = ['Eric','Dzung','Gleb','Will','Shibo','Rawan','Jiapeng','JC','Matt']
+protocol = 'inlabStr'
+print(protocol)
 
+# %  for US, qualified subjs: Dzung Shibo Rawan JC Jiapeng Matt
+# %  for US, finished subjs:  Dzung Shibo Rawan  7     6     9
+
+#           0       1       2      3      4       5        6      7     8   9(no HS)    10
+subjs = ['Eric','Dzung','Gleb','Will','Shibo','Rawan','Jiapeng','JC','Cao','Matt', 'MattSmall']
 subj = subjs[i_subj]
+
+
+# 
+# # segmentation based on motif
+# 
+
 eng = matlab.engine.start_matlab()
 # i_subj = 1, run = 5, dist_thres = 1, n_motif =10 # ['Eric']=1 
-ans = eng.FG_main_engy(subj, run, dist, n_motif)# ['Eric']=1 
+ans = eng.FG_main_engy_newversion(subj, run, dist, n_motif, config_file)
+
 print(ans)
+
+
 
 # from argparse import ArgumentParser
 
@@ -77,7 +91,7 @@ if 1:
             folder = '../../'+protocol+'/subject/'
             featFolder = folder+subjfolder+"feature/all_features/"
 
-            datafile =  folder+subjfolder+"testdata.csv"
+            datafile =  folder+subjfolder+"testdata_labeled.csv"
             segfolder = folder+subjfolder+"segmentation/"
                
             # 
@@ -145,7 +159,8 @@ if 1:
                         r_df = r_df[['Angular_Velocity_x', 'Angular_Velocity_y', 'Angular_Velocity_z', 'Linear_Accel_x','Linear_Accel_y','Linear_Accel_z']]
 
                         r_df = df_iter_flt(r_df)
-                        print(i)
+                        if i % 5000 == 0:
+                            print(i)
                         r_df = add_pitch_roll(r_df)
                         # generate the features
                         feat = gen_feat(r_df)
@@ -171,8 +186,11 @@ if 1:
         active_p_cnt = 0     
 
 
+        outfolder = '../../'+protocol+'/result/seg_clf/engy_IS2ISseg_personalized/'+subj+'/'
+        if not os.path.exists(outfolder):
+            os.makedirs(outfolder)
 
-        for threshold_str in ['0.5','0.6','0.7','0.8','0.9']:
+        for threshold_str in ['0.5']:#,'0.6','0.7','0.8','0.9'
 
             testsubj ='test'+subj
             trainsubj = 'train'+subj
@@ -235,7 +253,12 @@ if 1:
 
             
 
-            prec_pos, f1_pos, TPR, FPR, Specificity, MCC, CKappa, w_acc,_,y_pred = clf_cm_pickle(classifier, X, Y)
+            prec_pos, f1_pos, TPR, FPR, Specificity, MCC, CKappa, w_acc, cm, y_pred = clf_cm_pickle(classifier, X, Y)
+            ts = time.time()
+            current_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H-%M-%S')
+
+            print(current_time)
+            np.savetxt(outfolder+'RF_185_motif_dist'+str(dist)+'_multi-thre_'+subj+'_run'+str(run)+'(109)_cm'+str(current_time)+'.csv', cm, delimiter=",")
 
             crossValRes['Prec(pos)'][active_p_cnt] = prec_pos
             crossValRes['F1(pos)'][active_p_cnt] = f1_pos
@@ -247,8 +270,22 @@ if 1:
             crossValRes['w-acc'][active_p_cnt] = w_acc
             active_p_cnt = active_p_cnt+1
 
-        outfolder = '../../'+protocol+'/result/seg_clf/accx_IS2ISseg_personalized/'+subj+'/'
-        if not os.path.exists(outfolder):
-            os.makedirs(outfolder)
+        ts = time.time()
+        current_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H-%M-%S')
+        print(current_time)
 
-        crossValRes.to_csv( outfolder+'RF_185_motif_seg_on_trainmdl_multi-thre_'+subj+'_run'+str(run)+'(109).csv', index = None)
+        crossValRes.to_csv( outfolder+'RF_185_motif_dist'+str(dist)+'_multi-thre_'+subj+'_run'+str(run)+'(109)'+str(current_time)+'.csv', index = None)
+
+        split_subjs = ['train'+subj,'test'+subj]#
+
+        for split_subj in split_subjs:
+
+            subjfolder = split_subj + '/'
+            folder = '../../'+protocol+'/subject/'
+            featFolder = folder+subjfolder+"feature/all_features/"
+
+            datafile =  folder+subjfolder+"testdata_labeled.csv"
+            segfolder = folder+subjfolder+"segmentation/"
+
+            for f in glob.glob(segfolder+'engy_run'+str(run)+'_pred_data/*'):
+                os.remove(f)
